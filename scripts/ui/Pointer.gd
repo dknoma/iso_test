@@ -26,7 +26,6 @@ func _notification(what: int) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if Input.is_action_just_pressed(&"pointer_select"):
-			polygon.hide()
 			#mouse_pos = get_global_mouse_position()
 			top_pointer.global_position = get_global_mouse_position()
 			if !point_cast.get_collider():
