@@ -6,14 +6,10 @@ class_name Pointer extends Node2D
 @onready var polygon : Polygon2D = $Polygon
 
 
-#var tilemap : TileMap
-#var mouse_pos : Vector2
-
 var selected_tile : TileData
 
 
 func _ready() -> void:
-	#highlighter.hide()
 	polygon.hide()
 	#tilemap = get_tree().get_first_node_in_group("tilemap")
 	top_pointer.body_entered.connect(_on_touch_tile_top)
@@ -69,14 +65,11 @@ func _on_touch_tile_top(body : Node2D):
 			# get neighbor cell closest to pointer
 			neighbor = body.get_neighbor_cell(top_pos, TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE if  point_pos.x - top_cell_pos.x < 0 else TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE)
 			neighbor_cell_pos =  body.map_to_local(neighbor)
-			#print("[%s]side neighbor(%s) side check=%s-=-%s  / %s" % [l, "left" if  point_pos.x - top_cell_pos.x < 0 else "right", top_pos, neighbor, neighbor_cell_pos])
-
+			
 			# check all 3 possible overlapping tiles: top cell, closest neighbor, below cell
 			top_data = try_get_tile(l, point_pos, top_pos, top_cell_pos, body)
 			top_neighbor = try_get_tile(l, point_pos, neighbor, neighbor_cell_pos, body)
 			bot_data = try_get_tile(l, point_pos, base_pos, base_cell_pos, body)
-
-			#print("OMG=%s, %s, %s" % [top_data, top_neighbor, bot_data])
 
 			if bot_data:
 				tile_data = bot_data
@@ -119,6 +112,5 @@ func try_get_tile(layer : int, point_pos : Vector2, cell_coords : Vector2i, cell
 		var inside := Geometry2D.is_point_in_polygon(point_pos, polygon) # check if point is in polygon
 		#print("==%s, %s==%s , %s" % [point_pos, offset, cell_coords, cell_pos])
 		if inside:
-			#print("clicked %s inside layer[%s]" % [point_pos, layer])
 			return tile
 	return null
