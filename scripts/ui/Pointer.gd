@@ -79,6 +79,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			#point_cast.enabled = true
 			if !point_cast.get_collider():
 				print("no collider")
+				if selected_tile:
+					selected_tile.modulate = Color.WHITE
+					selected_tile = null
 				top_pointer.position = Vector2()
 				base_pointer.position = top_pointer.position
 				return
@@ -107,16 +110,15 @@ func _on_touch_tile_top(body : Node2D):
 		#print_debug("top - %s, %s" % [body, top_pointer.get_overlapping_bodies()])
 		#selected_cell = body.local_to_map(Vector2(mouse_pos.x, mouse_pos.y + 16))
 		var point_pos := body.get_local_mouse_position()
-		var top_pos : Vector2 = body.local_to_map(Vector2(point_pos.x, point_pos.y))
-		var base_pos : Vector2 = body.local_to_map(Vector2(point_pos.x, point_pos.y + 16))
-		var cell_pos = body.map_to_local(top_pos)
+		var top_pos : Vector2i = body.local_to_map(point_pos)
+		var base_pos : Vector2i = body.local_to_map(Vector2(point_pos.x, point_pos.y + 16))
 		top_pointer.global_position = mouse_pos
 
 		var coll = point_cast.get_collider()
 		var layer_id = body.get_layer_for_body_rid(point_cast.get_collider_rid())
 		var pos = point_cast.get_collision_point()
 
-		print("%s, %s, %s, %s" % [point_pos, top_pos, base_pos, point_pos - cell_pos])
+		print("%s, %s, %s" % [point_pos, top_pos, base_pos])
 
 		#var layer = body.get_layer_for_body_rid(get_rid())
 		#var layer = body.get_coords_for_body_rid(get_rid())
@@ -124,43 +126,79 @@ func _on_touch_tile_top(body : Node2D):
 
 		var tile_data : TileData = null
 		var selected_pos : Vector2
+		var top_cell_pos : Vector2 = body.map_to_local(top_pos)
+		var base_cell_pos : Vector2 = body.map_to_local(base_pos)
 		var layer := -1
+
+		var top_data = TileData
+		var top_neighbor = TileData
+		var bot_data = TileData
+
+		var neighbor : Vector2i
+		var neighbor_cell_pos : Vector2
 		for l in range(body.get_layers_count() - 1, -1, -1):
-			var diff = point_pos.x - cell_pos.x
-			print("hmm%s, %s" % [point_pos, Vector2(point_pos.x + 16, point_pos.y - 8)])
+			var diff = point_pos.x - top_cell_pos.x
+			print("hmm%s, %s, %s" % [point_pos, top_cell_pos, base_cell_pos])
 			if diff != 0:
-				var neighbor : Vector2i = body.get_neighbor_cell(top_pos, TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE if diff < 0 else TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE)
-				print("bottom neighbor side check(%s)=%s" % [sign(diff), neighbor])
-				# try to check bottom left or bottom right neighbor cell
-				tile_data = try_get_tile(l + 1, point_pos, neighbor, cell_pos, body, 16 if diff < 0 else -16, -8)
+				neighbor = body.get_neighbor_cell(top_pos, TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE if diff < 0 else TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE)
+				neighbor_cell_pos =  body.map_to_local(neighbor)
+				print("[%s]layer+ bottom neighbor side check(%s)=%s" % [l + 1, sign(diff), neighbor])
+				# try to check above layer: bottom left or bottom right neighbor cell
+				#tile_data = try_get_tile(l + 1, point_pos, neighbor, top_cell_pos, body, 16 if diff < 0 else -16, -8)
+				tile_data = try_get_tile(l + 1, point_pos, neighbor, neighbor_cell_pos, body)
 				if tile_data:
-					selected_pos = body.map_to_local(neighbor)
+					selected_pos = neighbor_cell_pos
 					break
+
 			if !tile_data:
+				diff = point_pos.x - top_cell_pos.x
 				print("top")
-				tile_data = try_get_tile(l, point_pos, top_pos, cell_pos, body, 0, 0)
-			if !tile_data:
-				print("base")
-				tile_data = try_get_tile(l, point_pos, base_pos, cell_pos, body)
+				neighbor = body.get_neighbor_cell(top_pos, TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE if diff < 0 else TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE)
+				neighbor_cell_pos =  body.map_to_local(neighbor)
+				print("[%s]side neighbor(%s) side check=%s-=-%s  / %s" % [l, sign(diff), top_pos, neighbor, neighbor_cell_pos])
 
-			print("tile_data[%s]=%s" % [l, tile_data])
-			if tile_data:
-				selected_pos = cell_pos
-				break
+				# check all 3 possible overlapping tiles
+				top_data = try_get_tile(l, point_pos, top_pos, top_cell_pos, body, 0, 0)
+				top_neighbor = try_get_tile(l, point_pos, neighbor, neighbor_cell_pos, body)
+				bot_data = try_get_tile(l, point_pos, base_pos, base_cell_pos, body)
+				#top_neighbor = try_get_tile(l, point_pos, neighbor, body.map_to_local(neighbor), body, 16 if diff < 0 else -16, 8)
+				#bot_data = try_get_tile(l, point_pos, base_pos, base_cell_pos, body, 0, -16)
 
-		if selected_pos:
+				print("OMG=%s, %s, %s" % [top_data, top_neighbor, bot_data])
+
+				if bot_data:
+					tile_data = bot_data
+					selected_pos = base_cell_pos
+					break
+				elif top_neighbor:
+					tile_data = top_neighbor
+					selected_pos = neighbor_cell_pos
+					break
+				elif top_data:
+					tile_data = top_data
+					selected_pos = top_cell_pos
+					break
+
+		if tile_data:
+			if selected_tile: selected_tile.modulate = Color.WHITE
+			selected_tile = tile_data
+			selected_tile.modulate = Color.REBECCA_PURPLE
+			#tilemap.local_to_map()
 			var global_pos := body.to_global(selected_pos)
-			highlighter.global_position = Vector2(global_pos.x, global_pos.y - 8)
+			highlighter.global_position = Vector2(global_pos.x, global_pos.y - 24)
 			highlighter.show()
+
+		#var tmp : Vector2 = body.to_global(body.map_to_local(top_pos))
+		#$tile_base_pointer/test.global_position = Vector2(tmp.x, tmp.y - 8)
 #
 		#print_debug("mouse point = %s->%s->%s; %s" % [mouse_pos, body.local_to_map(mouse_pos), body.map_to_local(body.local_to_map(mouse_pos)), body.get_layers_count()])
 
 
-func try_get_tile(layer : int, point_pos : Vector2, pos : Vector2, cell_pos : Vector2, tilemap : TileMap, x_offset := 0, y_offset := -16) -> TileData:
+func try_get_tile(layer : int, point_pos : Vector2, cell_coords : Vector2i, cell_pos : Vector2, tilemap : TileMap, x_offset := 0, y_offset := 0) -> TileData:
 	var tile : TileData
 
-	tile = tilemap.get_cell_tile_data(layer, pos)
-	print("<%s>%s" % [layer, tile])
+	tile = tilemap.get_cell_tile_data(layer, cell_coords)
+	print("<%s>%s, %s" % [layer, cell_coords, tile])
 	var z_index = tilemap.get_layer_z_index(layer)
 	if tile:
 		var polygon = tile.get_collision_polygon_points(2, 0)
@@ -170,12 +208,11 @@ func try_get_tile(layer : int, point_pos : Vector2, pos : Vector2, cell_pos : Ve
 			polygon.set(i, Vector2i(point.x + cell_pos.x, point.y + cell_pos.y))
 			i += 1
 		print(polygon)
-		var inside := Geometry2D.is_point_in_polygon(Vector2(point_pos.x + x_offset, point_pos.y + y_offset), polygon)
-		print("===%s , %s" % [pos, cell_pos])
+		var offset := Vector2(point_pos.x + x_offset, point_pos.y + y_offset)
+		var inside := Geometry2D.is_point_in_polygon(offset, polygon)
+		print("==%s, %s==%s , %s" % [point_pos, offset, cell_coords, cell_pos])
 		if inside:
-			print("clicked inside layer[%s]" % [layer])
-			#break
-			selected_tile = tile
+			print("clicked %s inside layer[%s]" % [point_pos, layer])
 			return tile
 	return null
 
@@ -185,11 +222,11 @@ func _on_touch_tile_base(body : Node2D):
 
 	if body is TileMap:
 		var local := body.get_local_mouse_position()
-		var cell_pos : Vector2 = body.local_to_map(Vector2(local.x, local.y + 16))
-		#var cell_base_pos := Vector2(cell_pos.x, cell_pos.y + 16)
-		#selected_cell = body.local_to_map(Vector2(mouse_pos.x, mouse_pos.y + 16))
-		var pos : Vector2 = body.map_to_local(cell_pos)
-		base_pointer.global_position = Vector2(pos.x, pos.y - 16)
+		#var cell_pos : Vector2 = body.local_to_map(Vector2(local.x, local.y + 16))
+		##var cell_base_pos := Vector2(cell_pos.x, cell_pos.y + 16)
+		##selected_cell = body.local_to_map(Vector2(mouse_pos.x, mouse_pos.y + 16))
+		#var pos : Vector2 = body.map_to_local(cell_pos)
+		#base_pointer.global_position = Vector2(pos.x, pos.y - 16)
 
 		#var layer = body.get_layer_for_body_rid(get_rid())
 		#var layer = body.get_coords_for_body_rid(get_rid())
