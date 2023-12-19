@@ -46,20 +46,20 @@ func _unhandled_input(event: InputEvent) -> void:
 func _on_touch_tile_top(body : Node2D):
 	if body is TileMap:
 		var point_pos := body.get_local_mouse_position()
-		var top_pos : Vector2i = body.local_to_map(point_pos)
-		var base_pos : Vector2i = body.local_to_map(Vector2(point_pos.x, point_pos.y + 16))
 
 		var layer := -1
-		var tile_data : TileData = null
+		var tile_data : TileData
 		var top_data = TileData
 		var top_neighbor = TileData
 		var bot_data = TileData
 		
+		var top_pos : Vector2i = body.local_to_map(point_pos)
 		var top_cell_pos : Vector2 = body.map_to_local(top_pos)
+		var base_pos : Vector2i = body.local_to_map(Vector2(point_pos.x, point_pos.y + 16))
 		var base_cell_pos : Vector2 = body.map_to_local(base_pos)
-		var neighbor_cell_pos : Vector2
 		
 		var neighbor : Vector2i
+		var neighbor_cell_pos : Vector2
 		var selected_pos : Vector2
 		for l in range(body.get_layers_count() - 1, -1, -1):
 			# get neighbor cell closest to pointer
@@ -89,6 +89,19 @@ func _on_touch_tile_top(body : Node2D):
 
 		if tile_data:
 			selected_tile = tile_data
+			var next_cell = body.local_to_map(selected_pos)
+			var next_pos := Vector2(selected_pos.x, selected_pos.y - 16)
+			var tmp : TileData
+			var i = 1
+			for l in range(layer + 1, body.get_layers_count()):
+				next_pos = Vector2(selected_pos.x, selected_pos.y - (i * 16))
+				tmp = try_get_tile(l, Vector2(point_pos.x, point_pos.y - (i * 16)), Vector2i(next_cell.x, next_cell.y - (i * 2)), next_pos, body)
+				print_debug("check top = ", tmp)
+				if !tmp: break
+				selected_tile = tmp
+				selected_pos = next_pos
+				layer = l
+				i += 1
 			var global_pos := body.to_global(selected_pos)
 			polygon.hide()
 			polygon.global_position = Vector2(global_pos.x, global_pos.y)
