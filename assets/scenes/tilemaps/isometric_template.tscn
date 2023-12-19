@@ -1,10 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://b2v32rkmnhnp2"]
+[gd_scene load_steps=7 format=3 uid="uid://b2v32rkmnhnp2"]
 
 [ext_resource type="TileSet" uid="uid://byyajy22ueghw" path="res://assets/scenes/tilemaps/isometric_template.tres" id="1_hcv77"]
 [ext_resource type="Texture2D" uid="uid://4i2vkmgshttk" path="res://assets/art/sprites/test_sprites.png" id="2_gm7lw"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="2_n38y2"]
 [ext_resource type="Script" path="res://scripts/ui/Pointer.gd" id="3_fyr8x"]
-[ext_resource type="Texture2D" uid="uid://1dh1vwxsetig" path="res://assets/art/ui/isometric_ui.png" id="3_uk5tu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w1srw"]
 size = Vector2(16, 8)
@@ -73,14 +72,6 @@ collision_mask = 8
 [node name="Collider" type="CollisionShape2D" parent="TileMap/Pointer/tile_top_pointer"]
 shape = SubResource("CircleShape2D_rkoc7")
 debug_color = Color(0.211765, 0.2, 0.909804, 0.894118)
-
-[node name="Highlighter" type="Sprite2D" parent="TileMap/Pointer/tile_top_pointer"]
-visible = false
-self_modulate = Color(1, 1, 1, 0.529412)
-position = Vector2(0, -8)
-texture = ExtResource("3_uk5tu")
-hframes = 8
-vframes = 4
 
 [node name="point_cast" type="RayCast2D" parent="TileMap/Pointer"]
 z_index = 4
