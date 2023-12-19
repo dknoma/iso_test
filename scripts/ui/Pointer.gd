@@ -114,15 +114,7 @@ func _on_touch_tile_top(body : Node2D):
 		var base_pos : Vector2i = body.local_to_map(Vector2(point_pos.x, point_pos.y + 16))
 		top_pointer.global_position = mouse_pos
 
-		var coll = point_cast.get_collider()
-		var layer_id = body.get_layer_for_body_rid(point_cast.get_collider_rid())
-		var pos = point_cast.get_collision_point()
-
 		print("%s, %s, %s" % [point_pos, top_pos, base_pos])
-
-		#var layer = body.get_layer_for_body_rid(get_rid())
-		#var layer = body.get_coords_for_body_rid(get_rid())
-
 
 		var tile_data : TileData = null
 		var selected_pos : Vector2
@@ -137,47 +129,33 @@ func _on_touch_tile_top(body : Node2D):
 		var neighbor : Vector2i
 		var neighbor_cell_pos : Vector2
 		for l in range(body.get_layers_count() - 1, -1, -1):
-			var diff = point_pos.x - top_cell_pos.x
-			print("hmm%s, %s, %s" % [point_pos, top_cell_pos, base_cell_pos])
-			if diff != 0:
-				neighbor = body.get_neighbor_cell(top_pos, TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE if diff < 0 else TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE)
-				neighbor_cell_pos =  body.map_to_local(neighbor)
-				print("[%s]layer+ bottom neighbor side check(%s)=%s" % [l + 1, sign(diff), neighbor])
-				# try to check above layer: bottom left or bottom right neighbor cell
-				#tile_data = try_get_tile(l + 1, point_pos, neighbor, top_cell_pos, body, 16 if diff < 0 else -16, -8)
-				tile_data = try_get_tile(l + 1, point_pos, neighbor, neighbor_cell_pos, body)
-				if tile_data:
-					selected_pos = neighbor_cell_pos
-					break
+			# get neighbor cell closest to pointer
+			neighbor = body.get_neighbor_cell(top_pos, TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE if  point_pos.x - top_cell_pos.x < 0 else TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE)
+			neighbor_cell_pos =  body.map_to_local(neighbor)
+			print("[%s]side neighbor(%s) side check=%s-=-%s  / %s" % [l, "left" if  point_pos.x - top_cell_pos.x < 0 else "right", top_pos, neighbor, neighbor_cell_pos])
 
-			if !tile_data:
-				diff = point_pos.x - top_cell_pos.x
-				print("top")
-				neighbor = body.get_neighbor_cell(top_pos, TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE if diff < 0 else TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE)
-				neighbor_cell_pos =  body.map_to_local(neighbor)
-				print("[%s]side neighbor(%s) side check=%s-=-%s  / %s" % [l, sign(diff), top_pos, neighbor, neighbor_cell_pos])
+			# check all 3 possible overlapping tiles: top cell, closest neighbor, below cell
+			top_data = try_get_tile(l, point_pos, top_pos, top_cell_pos, body, 0, 0)
+			top_neighbor = try_get_tile(l, point_pos, neighbor, neighbor_cell_pos, body)
+			bot_data = try_get_tile(l, point_pos, base_pos, base_cell_pos, body)
 
-				# check all 3 possible overlapping tiles
-				top_data = try_get_tile(l, point_pos, top_pos, top_cell_pos, body, 0, 0)
-				top_neighbor = try_get_tile(l, point_pos, neighbor, neighbor_cell_pos, body)
-				bot_data = try_get_tile(l, point_pos, base_pos, base_cell_pos, body)
-				#top_neighbor = try_get_tile(l, point_pos, neighbor, body.map_to_local(neighbor), body, 16 if diff < 0 else -16, 8)
-				#bot_data = try_get_tile(l, point_pos, base_pos, base_cell_pos, body, 0, -16)
+			print("OMG=%s, %s, %s" % [top_data, top_neighbor, bot_data])
 
-				print("OMG=%s, %s, %s" % [top_data, top_neighbor, bot_data])
-
-				if bot_data:
-					tile_data = bot_data
-					selected_pos = base_cell_pos
-					break
-				elif top_neighbor:
-					tile_data = top_neighbor
-					selected_pos = neighbor_cell_pos
-					break
-				elif top_data:
-					tile_data = top_data
-					selected_pos = top_cell_pos
-					break
+			if bot_data:
+				tile_data = bot_data
+				selected_pos = base_cell_pos
+				layer = l
+				break
+			elif top_neighbor:
+				tile_data = top_neighbor
+				selected_pos = neighbor_cell_pos
+				layer = l
+				break
+			elif top_data:
+				tile_data = top_data
+				selected_pos = top_cell_pos
+				layer = l
+				break
 
 		if tile_data:
 			if selected_tile: selected_tile.modulate = Color.WHITE
@@ -187,6 +165,7 @@ func _on_touch_tile_top(body : Node2D):
 			var global_pos := body.to_global(selected_pos)
 			highlighter.global_position = Vector2(global_pos.x, global_pos.y - 24)
 			highlighter.show()
+			highlighter.z_index = layer + 1
 
 		#var tmp : Vector2 = body.to_global(body.map_to_local(top_pos))
 		#$tile_base_pointer/test.global_position = Vector2(tmp.x, tmp.y - 8)

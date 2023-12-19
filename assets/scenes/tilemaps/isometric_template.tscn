@@ -66,7 +66,7 @@ shape = SubResource("RectangleShape2D_w1srw")
 zoom = Vector2(4, 4)
 
 [node name="Pointer" type="Node2D" parent="TileMap"]
-z_index = 5
+y_sort_enabled = true
 script = ExtResource("3_fyr8x")
 
 [node name="tile_top_pointer" type="Area2D" parent="TileMap/Pointer"]
@@ -79,8 +79,6 @@ shape = SubResource("CircleShape2D_rkoc7")
 debug_color = Color(0.211765, 0.2, 0.909804, 0.894118)
 
 [node name="tile_base_pointer" type="Area2D" parent="TileMap/Pointer"]
-z_index = 4
-y_sort_enabled = true
 collision_layer = 4
 
 [node name="Highlighter" type="Sprite2D" parent="TileMap/Pointer/tile_base_pointer"]
