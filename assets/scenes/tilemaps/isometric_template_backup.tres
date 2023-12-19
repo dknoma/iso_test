@@ -4026,6 +4026,6 @@ physics_layer_1/collision_layer = 1
 physics_layer_1/collision_mask = 4
 physics_layer_2/collision_layer = 8
 physics_layer_2/collision_mask = 4
-custom_data_layer_0/name = "xx"
+custom_data_layer_0/name = ""
 custom_data_layer_0/type = 24
 sources/0 = SubResource("TileSetAtlasSource_yp5n0")
