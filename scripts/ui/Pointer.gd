@@ -35,7 +35,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if Input.is_action_just_released(&"pointer_select"):
 			for c in get_tree().get_nodes_in_group("marker"):
-				c.queue_free()
+				c.free()
 			top_pointer.global_position = get_global_mouse_position()
 			if !point_cast.get_collider():
 				print_debug("no collider")
@@ -51,7 +51,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			polygon.position = Vector2()
 			var markers : Node = get_tree().get_first_node_in_group("markers")
 			for c in markers.get_children():
-				c.queue_free()
+				c.free()
 	elif event is InputEventKey:
 		print_debug("event=%s, %s, %s ,%s" % [event, pressed, event.is_pressed(), Input.is_physical_key_pressed(KEY_Q)])
 		if event.keycode == KEY_Q and event.is_pressed() and !pressed:
@@ -64,7 +64,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func tiles_along_path() -> void:
 	for c in get_tree().get_nodes_in_group("marker"):
-		c.queue_free()
+		c.free()
 		
 	var dict := select_tile(tilemap)
 	
