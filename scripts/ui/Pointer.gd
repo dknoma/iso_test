@@ -36,10 +36,11 @@ var pressed := false
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if Input.is_action_just_released(&"pointer_select"):
-			#mouse_pos = get_global_mouse_position()
+			for c in markers.get_children():
+				c.queue_free()
 			top_pointer.global_position = get_global_mouse_position()
 			if !point_cast.get_collider():
-				print("no collider")
+				print_debug("no collider")
 				#if selected_tile:
 					#selected_tile = null
 				polygon.hide()
@@ -54,7 +55,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			for c in markers.get_children():
 				c.queue_free()
 	elif event is InputEventKey:
-		print("event=%s, %s, %s ,%s" % [event, pressed, event.is_pressed(), Input.is_physical_key_pressed(KEY_Q)])
+		print_debug("event=%s, %s, %s ,%s" % [event, pressed, event.is_pressed(), Input.is_physical_key_pressed(KEY_Q)])
 		if event.keycode == KEY_Q and event.is_pressed() and !pressed:
 			pressed = true
 			tiles_along_path()
@@ -77,16 +78,13 @@ func tiles_along_path() -> void:
 	var target_origin_pos = Vector2(target_pos.x, target_pos.y + target_y_sort_origin)
 	var target_origin_cell = tilemap.local_to_map(target_origin_pos)
 	var selected_cell = tilemap.local_to_map(selected_pos)
-	print("target=%s, selected=%s | %s" % [target_cell, selected_cell, dict])
+	#print_debug("target=%s, selected=%s | %s" % [target_cell, selected_cell, dict])
 	
 	# TODO: placeholders
 	var range := 4
 	var jump := 4
 	
 	var neighbor_direction := -1
-	#var current_cell : Vector2i = selected_cell
-	#var current_pos : Vector2 = selected_pos
-	var i := 0
 	var current_layer := selected_layer # original layer that current cell is on
 	var current_y_sort_origin := tilemap.get_layer_y_sort_origin(selected_layer)
 	var current_origin_pos : Vector2 = Vector2(selected_pos.x, selected_pos.y + current_y_sort_origin)
@@ -98,7 +96,7 @@ func tiles_along_path() -> void:
 	var next_y_sort_origin := current_y_sort_origin
 	
 	var current_tile : TileData = tilemap.get_cell_tile_data(current_layer, current_origin_cell)
-	#while next_cell != target_origin_cell:
+	var i := 0
 	while next_cell != target_cell:
 		#print_rich("[rainbow]GGGG[/rainbow] [%s] target[%s, %s] next=[%s, %s] | %s" % [i, target_cell, target_origin_cell, next_cell, current_origin_cell, [next_y_sort_origin]])
 		
@@ -116,10 +114,10 @@ func tiles_along_path() -> void:
 			current_layer = next_data["layer"]
 			next_y_sort_origin = next_data["y_sort_origin"]
 			p = next_data["polygon"]
-		#print("d=%s" % [next_data])
+		#print_debug("d=%s" % [next_data])
 		
 		if next_cell != target_cell:
-			#print("777 - %s-%s, %s" % [next_cell, current_origin_cell, target_origin_cell])
+			#print_debug("777 - %s-%s, %s" % [next_cell, current_origin_cell, target_origin_cell])
 			# next cell is different from target cell, but have same origin: on same column in world
 			if current_origin_cell == target_origin_cell:
 				#print_debug("different cells, but same origin: on same column in world")
@@ -134,7 +132,7 @@ func tiles_along_path() -> void:
 					p.set(j, Vector2(point.x, point.y))
 					j += 1
 				
-		#print("y_sort_check=%s | %s, [%s, %s] %s" % [[next_cell, current_origin_cell], [target_y_sort_origin, next_y_sort_origin], target_layer, current_layer, cell_neighbor_name(neighbor_direction)])
+		#print_debug("y_sort_check=%s | %s, [%s, %s] %s" % [[next_cell, current_origin_cell], [target_y_sort_origin, next_y_sort_origin], target_layer, current_layer, cell_neighbor_name(neighbor_direction)])
 		
 		# Tile is missing somehow on current path...
 		# TODO: add some handling to move around void areas
@@ -143,23 +141,30 @@ func tiles_along_path() -> void:
 			push_error("Tile on layer[%s] @ origin%s is null somehow..." % [current_layer, next_cell])
 			return
 		
+		var container := Node2D.new()
+		container.y_sort_enabled = true
+		container.z_index = 0
+		markers.add_child(container)
 		var new_polygon = Polygon2D.new()
-		markers.add_child(new_polygon)
+		container.add_child(new_polygon)
 		new_polygon.y_sort_enabled = true
 		new_polygon.polygon = p
 		new_polygon.z_index = 0
-		new_polygon.global_position = Vector2(next_pos.x, next_pos.y)
+		container.global_position = tilemap.map_to_local(next_origin_cell)
+		new_polygon.position = Vector2(0, -next_y_sort_origin)
 		
-		#print("distance=%s, %s vs %s | %s" % [i, next_cell, target_cell, next_cell == target_cell])
 		i += 1
 	
+	print_debug("distance=%s, range=%s, %s" % [i, range, markers.get_child_count()])
 	if i > range:
 		for poly in markers.get_children():
-			poly.self_modulate = Color(1, 0, 0, 0.5)
-		print("out of range %s != %s" % [next_cell, target_cell])
+			if poly.is_queued_for_deletion(): continue
+			poly.get_child(0).self_modulate = Color(1, 0, 0, 0.5)
+		print_debug("out of range %s != %s" % [next_cell, target_cell])
 	else:
 		for poly in markers.get_children():
-			poly.self_modulate = Color(0.686275, 0.933333, 0.933333, 0.5)
+			if poly.is_queued_for_deletion(): continue
+			poly.get_child(0).self_modulate = Color(0.686275, 0.933333, 0.933333, 0.5)
 
 
 func get_stacked_tile(origin_cell : Vector2i, current_layer : int, height_limit : int) -> Dictionary:
@@ -169,22 +174,26 @@ func get_stacked_tile(origin_cell : Vector2i, current_layer : int, height_limit 
 	var next_tile : TileData
 	
 	var y_sort_origin := 0
+	var nothing_under := false
 	var i = 0 # the amount of 16px offset for the next layers
 	for l in range(0, tilemap.get_layers_count()):
 		next_cell = Vector2i(origin_cell.x, origin_cell.y - i)
 		var tmp = tilemap.get_cell_tile_data(l, next_cell)
-		#print("i=%s, %s, %s, %s" % [i, l, tmp, next_cell])
+		#print_debug("i=%s, %s, %s, %s" % [i, l, tmp, next_cell])
 		#print_debug("check above tiles: %s - %s = %s" % [point_pos, next_pos, tmp])
 		i += 2
-		if !tmp: 
+		if !tmp:
+			if l == 0 and !nothing_under: nothing_under = true
+			if nothing_under: continue
 			#if (current_layer + height_limit) - l >= 0: continue # continue if still within heigh limits
 			break # break if run out of tiles directly connected above; should not select tiles that are above but not connected
+		nothing_under = false
 		next_tile = tmp
 		out["next_tile"] = next_tile
 		out["next_cell"] = next_cell
 		out["layer"] = l
 		out["y_sort_origin"] = tilemap.get_layer_y_sort_origin(l) # get y_sort of the next tile above
-	#print("after TMP - %s, %s | %s" % [current_layer, next_cell, y_sort_origin])
+	#print_debug("after TMP - %s, %s | %s" % [current_layer, next_cell, y_sort_origin])
 	
 	if !next_tile:
 		return out # no valid tile found
@@ -202,24 +211,21 @@ func get_stacked_tile(origin_cell : Vector2i, current_layer : int, height_limit 
 # Compare cell origins to see which direction should move in
 func get_neighbor_direction(target_cell : Vector2i, selected_cell : Vector2i) -> int:
 	var neighbor_direction = -1
-	
-	#print("t=%s, s=%s" % [target_cell, selected_cell])
-	
+
 	if target_cell.x != selected_cell.x and target_cell.y != selected_cell.y:
 		neighbor_direction = TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE if target_cell.x > selected_cell.x and target_cell.y < selected_cell.y else TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE if target_cell.x > selected_cell.x and target_cell.y > selected_cell.y else TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE if target_cell.x < selected_cell.x and target_cell.y > selected_cell.y else TileSet.CELL_NEIGHBOR_TOP_LEFT_SIDE if target_cell.x < selected_cell.x and target_cell.y < selected_cell.y else -1
 	
 	elif target_cell.x != selected_cell.x and target_cell.y == selected_cell.y:
-		print("horizontal")
+		#print_debug("horizontal")
 		neighbor_direction = TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE if target_cell.x > selected_cell.x else TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE
 	elif target_cell.x == selected_cell.x and target_cell.y != selected_cell.y:
-		print("vertical")
+		#print_debug("vertical")
 		if target_cell.y < selected_cell.y:
-			neighbor_direction = TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE if (selected_cell.y % 2) == 0 else TileSet.CELL_NEIGHBOR_TOP_LEFT_SIDE
+			neighbor_direction = TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE if (selected_cell.y % 2) == 0 else TileSet.CELL_NEIGHBOR_TOP_LEFT_SIDE # go right if y value is even, left if odd
 		else:
-			neighbor_direction = TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE if (selected_cell.y % 2) == 0 else TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE
-		#neighbor_direction = TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE if target_cell.y < selected_cell.y else TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE
+			neighbor_direction = TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE if (selected_cell.y % 2) == 0 else TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE # go right if y value is even, left if odd
 		
-	print_debug("neighbor=%s" % [cell_neighbor_name(neighbor_direction)])
+	#print_debug("neighbor=%s" % [cell_neighbor_name(neighbor_direction)])
 	
 	return neighbor_direction
 
@@ -229,7 +235,7 @@ func cell_neighbor_name(neighbor : int) -> String:
 
 
 func select_tile(tilemap : TileMap) -> Dictionary:
-	print("L - %s" % [[tilemap.get_cell_tile_data(0, Vector2()), tilemap.get_cell_tile_data(1, Vector2()), tilemap.get_cell_tile_data(2, Vector2()), tilemap.get_cell_tile_data(3, Vector2()), tilemap.get_cell_tile_data(4, Vector2())]])
+	print_debug("L - %s" % [[tilemap.get_cell_tile_data(0, Vector2()), tilemap.get_cell_tile_data(1, Vector2()), tilemap.get_cell_tile_data(2, Vector2()), tilemap.get_cell_tile_data(3, Vector2()), tilemap.get_cell_tile_data(4, Vector2())]])
 	var point_pos := tilemap.get_local_mouse_position()
 
 	var tile_data : TileData
@@ -260,33 +266,33 @@ func select_tile(tilemap : TileMap) -> Dictionary:
 			tile_data = bot_data
 			target_pos = base_cell_pos
 			target_layer = l
-			print("bot-%s,%s,%s" % [tile_data, target_pos, target_layer])
+			print_debug("bot-%s,%s,%s" % [tile_data, target_pos, target_layer])
 			break
 		elif top_neighbor:
 			tile_data = top_neighbor
 			target_pos = neighbor_cell_pos
 			target_layer = l
-			print("neighbor-%s,%s,%s" % [tile_data, target_pos, target_layer])
+			print_debug("neighbor-%s,%s,%s" % [tile_data, target_pos, target_layer])
 			break
 		elif top_data:
 			tile_data = top_data
 			target_pos = top_cell_pos
 			target_layer = l
-			print("top-%s,%s,%s" % [tile_data, target_pos, target_layer])
+			print_debug("top-%s,%s,%s" % [tile_data, target_pos, target_layer])
 			break
 
 	if tile_data:
 		var target_tile = tile_data
 		var base_cell = tilemap.local_to_map(target_pos) # cell of clicked on tile; don't change
 		var next_pos := Vector2(target_pos.x, target_pos.y - 16)
-		print_debug("selected %s, %s | %s" % [base_cell, next_pos, tilemap.get_layers_count()])
+		#print_debug("selected %s, %s | %s" % [base_cell, next_pos, tilemap.get_layers_count()])
 		var tmp : TileData
 		var i = 1 # the amount of 16px offset for the next layers
 		for l in range(target_layer + 1, tilemap.get_layers_count()):
 			next_pos = Vector2(target_pos.x, target_pos.y - (i * 16))
 			# use next_pos since 'inside(...)' should always be true for tiles above the selected one
 			tmp = try_get_tile(l, next_pos, Vector2i(base_cell.x, base_cell.y - (i * 2)), next_pos, tilemap)
-			print_debug("check above tiles: %s - %s = %s" % [point_pos, next_pos, tmp])
+			#print_debug("check above tiles: %s - %s = %s" % [point_pos, next_pos, tmp])
 			if !tmp: break # break if run out of tiles directly connected above; should not select tiles that are above but not connected
 			target_tile = tmp
 			target_pos = next_pos
@@ -329,7 +335,7 @@ func try_get_stacked_tile(tile_data : TileData, target_pos : Vector2, target_lay
 	var next_pos := Vector2(target_pos.x, target_pos.y)
 	#var next_pos := Vector2(target_pos.x, target_pos.y - 16)
 	#target_pos = Vector2(target_pos.x, target_pos.y + (target_layer * 16))
-	print_debug("stack - selected %s, %s | L[%s], %s" % [base_cell, next_pos, target_layer, y_sort_origin])
+	#print_debug("stack - selected %s, %s | L[%s], %s" % [base_cell, next_pos, target_layer, y_sort_origin])
 	var tmp : TileData
 	var tmp_cell : Vector2i
 	var i = -target_layer # the amount of 16px offset for the next layers
@@ -337,13 +343,13 @@ func try_get_stacked_tile(tile_data : TileData, target_pos : Vector2, target_lay
 		#next_pos = Vector2(target_pos.x, target_pos.y - (i * 16))
 		
 	for l in range(0, tilemap.get_layers_count()):
-		print("i=%s, %s" % [i, i * 16])
+		#print_debug("i=%s, %s" % [i, i * 16])
 		tmp_cell = Vector2i(base_cell.x, base_cell.y - (i * 2))
 		next_pos = tilemap.map_to_local(tmp_cell)
 		#next_pos = Vector2(target_pos.x, target_pos.y - (i * 16))
 		# use next_pos since 'inside(...)' should always be true for tiles above the selected one
 		# FIXME: this is returning null somehow when trying to search during q highlight
-		print("GET TMP - %s, %s, [%s, %s], %s, map_to_loc=%s" % [l, next_pos, base_cell, tmp_cell, next_pos, tilemap.map_to_local(tmp_cell)])
+		#print_debug("GET TMP - %s, %s, [%s, %s], %s, map_to_loc=%s" % [l, next_pos, base_cell, tmp_cell, next_pos, tilemap.map_to_local(tmp_cell)])
 		tmp = try_get_tile(l, next_pos, tmp_cell, next_pos, tilemap)
 		#print_debug("check above tiles: %s - %s = %s" % [point_pos, next_pos, tmp])
 		if !tmp: break # break if run out of tiles directly connected above; should not select tiles that are above but not connected
@@ -353,7 +359,7 @@ func try_get_stacked_tile(tile_data : TileData, target_pos : Vector2, target_lay
 		target_layer = l
 		y_sort_origin = tilemap.get_layer_y_sort_origin(l) # get y_sort of the next tile above
 		i += 1
-	print("after TMP - %s, [%s, %s], %s" % [target_layer, target_cell, target_pos, y_sort_origin])
+	#print_debug("after TMP - %s, [%s, %s], %s" % [target_layer, target_cell, target_pos, y_sort_origin])
 	# get surface polygon shape from collision layer 3
 	var p := target_tile.get_collision_polygon_points(3, 0)
 	# adjust polygon point positions to account for layer y_sort_origin
@@ -374,7 +380,7 @@ func try_get_stacked_tile(tile_data : TileData, target_pos : Vector2, target_lay
 
 func try_get_tile(layer : int, point_pos : Vector2, cell_coords : Vector2i, cell_pos : Vector2, tilemap : TileMap) -> TileData:
 	var tile : TileData = tilemap.get_cell_tile_data(layer, cell_coords)
-	print("<%s>%s, %s" % [layer, cell_coords, tile])
+	#print_debug("<%s>%s, %s" % [layer, cell_coords, tile])
 	if tile:
 		var polygon = tile.get_collision_polygon_points(2, 0)
 		var i := 0
@@ -383,7 +389,7 @@ func try_get_tile(layer : int, point_pos : Vector2, cell_coords : Vector2i, cell
 			polygon.set(i, Vector2i(point.x + cell_pos.x, point.y + cell_pos.y))
 			i += 1
 		var inside := Geometry2D.is_point_in_polygon(point_pos, polygon) # check if point is in polygon
-		#print("==%s, %s==%s , %s" % [point_pos, offset, cell_coords, cell_pos])
+		#print_debug("==%s, %s==%s , %s" % [point_pos, offset, cell_coords, cell_pos])
 		if inside:
 			return tile
 	return null
