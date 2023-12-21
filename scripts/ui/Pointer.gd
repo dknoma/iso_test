@@ -1,6 +1,12 @@
 class_name Pointer extends Node2D
 
 
+enum AoEType {
+	CIRCLE,
+	SQUARE
+}
+
+
 signal tile_selected(position : Vector2, tile_data : TileData, y_sort_origin : int)
 
 
@@ -9,18 +15,30 @@ signal tile_selected(position : Vector2, tile_data : TileData, y_sort_origin : i
 @onready var top_collider : CollisionShape2D = $tile_top_pointer/Collider
 @onready var polygon : Polygon2D = $Polygon
 
+
 var tilemap : TileMap
+
+var pressed := false
 
 var selected_tile : TileData
 var selected_pos : Vector2
 var selected_layer : int
-#var selected_y_sort : int
+
+
+var debug_edit : SpinBox
+
 
 func _ready() -> void:
 	polygon.hide()
 	tilemap = get_tree().get_first_node_in_group("tilemap")
 	top_pointer.body_entered.connect(_on_touch_tile_top)
 	top_collider.disabled = true
+	var canvas := CanvasLayer.new()
+	add_child(canvas)
+	debug_edit = SpinBox.new()
+	canvas.add_child(debug_edit)
+	debug_edit.value = 3
+	debug_edit.focus_mode = Control.FOCUS_NONE
 
 
 func _notification(what: int) -> void:
@@ -29,7 +47,6 @@ func _notification(what: int) -> void:
 	elif what == NOTIFICATION_WM_WINDOW_FOCUS_IN:
 		get_tree().paused = false
 
-var pressed := false
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -49,33 +66,126 @@ func _unhandled_input(event: InputEvent) -> void:
 			#selected_tile = null
 			polygon.hide()
 			polygon.position = Vector2()
-			var markers : Node = get_tree().get_first_node_in_group("markers")
-			for c in markers.get_children():
+			for c in get_tree().get_nodes_in_group("marker"):
 				c.free()
 	elif event is InputEventKey:
 		print_debug("event=%s, %s, %s ,%s" % [event, pressed, event.is_pressed(), Input.is_physical_key_pressed(KEY_Q)])
-		if event.keycode == KEY_Q and event.is_pressed() and !pressed:
+		if event.is_pressed() and !pressed:
 			pressed = true
-			tiles_along_path()
-		elif event.keycode == KEY_Q and !event.is_pressed() and pressed:
+			if event.keycode == KEY_Q:
+				tiles_along_path()
+			elif event.keycode == KEY_Z:
+				tile_aoe(AoEType.CIRCLE, debug_edit.value)
+		elif !event.is_pressed() and pressed:
 			pressed = false
 		#if Input.is_action_just_pressed("ui_text_completion_replace"):
+
+
+func tile_aoe(type : AoEType, radius : int):
+	for c in get_tree().get_nodes_in_group("marker"):
+		c.free()
+
+	# TODO: placeholder origin pos
+	var dict := select_tile(tilemap.get_local_mouse_position(), tilemap)
+	if !dict: return
+	var target_pos : Vector2 = dict["target_pos"]
+	var target_cell : Vector2i = dict["target_cell"]
+	var target_layer : int = dict["layer"]
+	var target_y_sort_origin : int = dict["y_sort_origin"]
+	var target_origin_pos = Vector2(target_pos.x, target_pos.y + target_y_sort_origin)
+	var target_origin_cell : Vector2i = tilemap.local_to_map(target_origin_pos)
+	var selected_cell : Vector2i = tilemap.local_to_map(selected_pos)
+	
+	# TODO: placeholders
+	var tile : TileData
+	var stacked_cell : Vector2i
+	var y_sort_origin := 0
+	var stacked_layer := 0
+	
+	var cell_set := get_area(target_origin_cell, radius)
+	print_debug("set=%s" % [cell_set])
+	
+	for cell in cell_set:
+		var p : PackedVector2Array = []
+		var next_data := get_stacked_tile(cell, 0, 0)
+		if next_data:
+			tile = next_data["next_tile"]
+			stacked_cell = next_data["next_cell"]
+			#next_pos = tilemap.map_to_local(stacked_cell)
+			stacked_layer = next_data["layer"]
+			y_sort_origin = next_data["y_sort_origin"]
+			p = next_data["polygon"]
+			
+		if !tile:
+			print_rich("Tile%s on layer[%s] not found" % [stacked_cell, stacked_layer])
+			#push_error("Tile on layer[%s] @ origin%s is null somehow..." % [stacked_layer, stacked_cell])
+			continue # just ignore cells that don't have valid tiles
+		
+		# container is used to determine the y sort origin of the polygons; otherwise wont sort correctly
+		var container := Node2D.new()
+		container.add_to_group("marker")
+		container.z_index = 0
+		tilemap.add_child(container)
+		var new_polygon = Polygon2D.new()
+		container.add_child(new_polygon)
+		new_polygon.y_sort_enabled = true
+		new_polygon.polygon = p
+		new_polygon.z_index = 0
+		container.global_position = tilemap.map_to_local(cell)
+		new_polygon.position = Vector2(0, -y_sort_origin)
+		
+	for poly in get_tree().get_nodes_in_group("marker"):
+		if poly.is_queued_for_deletion(): continue
+		poly.get_child(0).self_modulate = Color(0.686275, 0.933333, 0.933333, 0.5)
+
+
+func get_area(origin : Vector2i, radius : int) -> Dictionary:
+	var cell_set := {}
+	print_debug("Radius=%s, %s" % [radius, origin])
+	cell_set[origin] = true
+	for r in radius + 1:
+		if (r % 2) == 0:
+			print("even=", r)
+			for col in range(origin.x - (r / 2), origin.x + (r / 2) + 1):
+				for row in range(origin.y - r, origin.y + r + 1, 2):
+					if Vector2i(col, row) == origin: continue
+					print("cr[%s, %s]" % [col, row])
+					cell_set[Vector2i(col, row)] = true
+		else:
+			print("odd=%s, %s" % [r, origin.x - r])
+			var even := (origin.y % 2) == 0
+			for col in range(origin.x - (r / 2) - 1 if even else origin.x - (r / 2), 1 + (origin.x + (r / 2) if even else origin.x + (r / 2) + 1)):
+				for row in range(origin.y - r, origin.y + r + 1, 2):
+					print("odd cr[%s, %s]" % [col, row])
+					cell_set[Vector2i(col, row)] = true
+	return cell_set
+
+
+func add_to_queue(origin : Vector2i, tilemap : TileMap, diagonal : bool) -> Array:
+	var queue := []
+	var neighbor := TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE if diagonal else TileSet.CELL_NEIGHBOR_RIGHT_CORNER
+	for i in 4:
+		var n := tilemap.get_neighbor_cell(origin, neighbor)
+		queue.push_back(n)
+		neighbor += 4 # get next corner to add
+	return queue
 
 
 func tiles_along_path() -> void:
 	for c in get_tree().get_nodes_in_group("marker"):
 		c.free()
 		
-	var dict := select_tile(tilemap)
+	# TODO: placeholder origin pos
+	var dict := select_tile(tilemap.get_local_mouse_position(), tilemap)
 	
 	if !dict.has("tile"): return
-	var target_pos = dict["target_pos"]
-	var target_cell = dict["target_cell"]
-	var target_layer = dict["layer"]
-	var target_y_sort_origin = dict["y_sort_origin"]
+	var target_pos : Vector2 = dict["target_pos"]
+	var target_cell : Vector2i = dict["target_cell"]
+	var target_layer : int = dict["layer"]
+	var target_y_sort_origin : int = dict["y_sort_origin"]
 	var target_origin_pos = Vector2(target_pos.x, target_pos.y + target_y_sort_origin)
-	var target_origin_cell = tilemap.local_to_map(target_origin_pos)
-	var selected_cell = tilemap.local_to_map(selected_pos)
+	var target_origin_cell : Vector2i = tilemap.local_to_map(target_origin_pos)
+	var selected_cell : Vector2i = tilemap.local_to_map(selected_pos)
 	#print_debug("target=%s, selected=%s | %s" % [target_cell, selected_cell, dict])
 	
 	# TODO: placeholders
@@ -233,20 +343,19 @@ func cell_neighbor_name(neighbor : int) -> String:
 	return "CELL_NEIGHBOR_TOP_RIGHT_SIDE" if neighbor == TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE else "CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE" if neighbor == TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE else "CELL_NEIGHBOR_BOTTOM_LEFT_SIDE" if neighbor == TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE else "CELL_NEIGHBOR_TOP_LEFT_SIDE" if neighbor == TileSet.CELL_NEIGHBOR_TOP_LEFT_SIDE else "<none>"
 
 
-func select_tile(tilemap : TileMap) -> Dictionary:
+func select_tile(origin_pos : Vector2, tilemap : TileMap) -> Dictionary:
 	print_debug("L - %s" % [[tilemap.get_cell_tile_data(0, Vector2()), tilemap.get_cell_tile_data(1, Vector2()), tilemap.get_cell_tile_data(2, Vector2()), tilemap.get_cell_tile_data(3, Vector2()), tilemap.get_cell_tile_data(4, Vector2())]])
-	var point_pos := tilemap.get_local_mouse_position()
 
 	var tile_data : TileData
 	var top_data : TileData
 	var top_neighbor : TileData
 	var bot_data : TileData
 	# get positions of possible overlapping tiles
-	var top_pos : Vector2i = tilemap.local_to_map(point_pos)
+	var top_pos : Vector2i = tilemap.local_to_map(origin_pos)
 	var top_cell_pos : Vector2 = tilemap.map_to_local(top_pos)
-	var neighbor : Vector2i = tilemap.get_neighbor_cell(top_pos, TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE if  point_pos.x - top_cell_pos.x < 0 else TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE) # get closest overlapping neighbor cell
+	var neighbor : Vector2i = tilemap.get_neighbor_cell(top_pos, TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE if  origin_pos.x - top_cell_pos.x < 0 else TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE) # get closest overlapping neighbor cell
 	var neighbor_cell_pos : Vector2 = tilemap.map_to_local(neighbor)
-	var base_pos : Vector2i = tilemap.local_to_map(Vector2(point_pos.x, point_pos.y + 16))
+	var base_pos : Vector2i = tilemap.local_to_map(Vector2(origin_pos.x, origin_pos.y + 16))
 	var base_cell_pos : Vector2 = tilemap.map_to_local(base_pos)
 	
 	# go from highest layer to lowest as highest are "closest" from the player's perspective
@@ -256,9 +365,9 @@ func select_tile(tilemap : TileMap) -> Dictionary:
 	for l in range(tilemap.get_layers_count() - 1, -1, -1):
 		# check all 3 possible overlapping tiles: top cell, closest neighbor, below cell
 		y_sort_origin = tilemap.get_layer_y_sort_origin(l)
-		top_data = try_get_tile(l, point_pos, top_pos, top_cell_pos, tilemap) 
-		top_neighbor = try_get_tile(l, point_pos, neighbor, neighbor_cell_pos, tilemap)
-		bot_data = try_get_tile(l, point_pos, base_pos, base_cell_pos, tilemap)
+		top_data = try_get_tile(l, origin_pos, top_pos, top_cell_pos, tilemap) 
+		top_neighbor = try_get_tile(l, origin_pos, neighbor, neighbor_cell_pos, tilemap)
+		bot_data = try_get_tile(l, origin_pos, base_pos, base_cell_pos, tilemap)
 		
 		# check tiles pointer is inside; set selected to 'closest' one (bot > neighbor > top)
 		if bot_data:
@@ -389,7 +498,7 @@ func try_get_tile(layer : int, point_pos : Vector2, cell_coords : Vector2i, cell
 
 func _on_touch_tile_top(body : Node2D):
 	if body is TileMap:
-		var dict = select_tile(body)
+		var dict = select_tile(body.get_local_mouse_position(), body)
 		if !dict: return
 		selected_tile = dict["tile"]
 		selected_pos = dict["target_pos"]
