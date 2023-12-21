@@ -10,7 +10,6 @@ signal tile_selected(position : Vector2, tile_data : TileData, y_sort_origin : i
 @onready var polygon : Polygon2D = $Polygon
 
 var tilemap : TileMap
-var markers : Node
 
 var selected_tile : TileData
 var selected_pos : Vector2
@@ -20,7 +19,6 @@ var selected_layer : int
 func _ready() -> void:
 	polygon.hide()
 	tilemap = get_tree().get_first_node_in_group("tilemap")
-	markers = get_tree().get_first_node_in_group("markers")
 	top_pointer.body_entered.connect(_on_touch_tile_top)
 	top_collider.disabled = true
 
@@ -36,7 +34,7 @@ var pressed := false
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if Input.is_action_just_released(&"pointer_select"):
-			for c in markers.get_children():
+			for c in get_tree().get_nodes_in_group("marker"):
 				c.queue_free()
 			top_pointer.global_position = get_global_mouse_position()
 			if !point_cast.get_collider():
@@ -65,7 +63,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func tiles_along_path() -> void:
-	for c in markers.get_children():
+	for c in get_tree().get_nodes_in_group("marker"):
 		c.queue_free()
 		
 	var dict := select_tile(tilemap)
@@ -141,10 +139,11 @@ func tiles_along_path() -> void:
 			push_error("Tile on layer[%s] @ origin%s is null somehow..." % [current_layer, next_cell])
 			return
 		
+		# container is used to determine the y sort origin of the polygons; otherwise wont sort correctly
 		var container := Node2D.new()
-		container.y_sort_enabled = true
+		container.add_to_group("marker")
 		container.z_index = 0
-		markers.add_child(container)
+		tilemap.add_child(container)
 		var new_polygon = Polygon2D.new()
 		container.add_child(new_polygon)
 		new_polygon.y_sort_enabled = true
@@ -154,15 +153,15 @@ func tiles_along_path() -> void:
 		new_polygon.position = Vector2(0, -next_y_sort_origin)
 		
 		i += 1
-	
-	print_debug("distance=%s, range=%s, %s" % [i, range, markers.get_child_count()])
+	var markers := get_tree().get_nodes_in_group("marker")
+	print_debug("distance=%s, range=%s, %s" % [i, range, markers.size()])
 	if i > range:
-		for poly in markers.get_children():
+		for poly in markers:
 			if poly.is_queued_for_deletion(): continue
 			poly.get_child(0).self_modulate = Color(1, 0, 0, 0.5)
 		print_debug("out of range %s != %s" % [next_cell, target_cell])
 	else:
-		for poly in markers.get_children():
+		for poly in markers:
 			if poly.is_queued_for_deletion(): continue
 			poly.get_child(0).self_modulate = Color(0.686275, 0.933333, 0.933333, 0.5)
 
@@ -317,14 +316,7 @@ func select_tile(tilemap : TileMap) -> Dictionary:
 			"polygon": p
 		}
 	else:
-		return {
-			#"tile": null,
-			#"target_pos": Vector2(),
-			#"target_cell": Vector2(),
-			#"layer": 0,
-			#"y_sort_origin": 0,
-			#"polygon": [],
-		}
+		return {}
 
 
 func try_get_stacked_tile(tile_data : TileData, target_pos : Vector2, target_layer : int, y_sort_origin : int) -> Dictionary:
