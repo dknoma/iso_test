@@ -69,7 +69,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			for c in get_tree().get_nodes_in_group("marker"):
 				c.free()
 	elif event is InputEventKey:
-		print_debug("event=%s, %s, %s ,%s" % [event, pressed, event.is_pressed(), Input.is_physical_key_pressed(KEY_Q)])
+		#print_debug("event=%s, %s, %s ,%s" % [event, pressed, event.is_pressed(), Input.is_physical_key_pressed(KEY_Q)])
+		pass
 		if event.is_pressed() and !pressed:
 			pressed = true
 			if event.keycode == KEY_Q:
@@ -107,7 +108,7 @@ func tile_aoe(type : AoEType, radius : int):
 	
 	for cell in cell_set:
 		var p : PackedVector2Array = []
-		var next_data := get_stacked_tile(cell, 0, 0)
+		var next_data := get_stacked_tile(cell, 0, 0, tilemap)
 		if next_data:
 			tile = next_data["next_tile"]
 			stacked_cell = next_data["next_cell"]
@@ -214,7 +215,7 @@ func tiles_along_path() -> void:
 		next_pos = tilemap.map_to_local(next_origin_cell)
 		
 		var p : PackedVector2Array = []
-		var next_data := get_stacked_tile(next_origin_cell, 0, jump)
+		var next_data := get_stacked_tile(next_origin_cell, 0, jump, tilemap)
 		if next_data:
 			current_tile = next_data["next_tile"]
 			next_cell = next_data["next_cell"]
@@ -276,7 +277,7 @@ func tiles_along_path() -> void:
 			poly.get_child(0).self_modulate = Color(0.686275, 0.933333, 0.933333, 0.5)
 
 
-func get_stacked_tile(origin_cell : Vector2i, current_layer : int, height_limit : int) -> Dictionary:
+func get_stacked_tile(origin_cell : Vector2i, current_layer : int, height_limit : int, tilemap : TileMap) -> Dictionary:
 	var out := {}
 	var start_layer := 0
 	var next_cell : Vector2i = origin_cell
@@ -344,7 +345,7 @@ func cell_neighbor_name(neighbor : int) -> String:
 
 
 func select_tile(origin_pos : Vector2, tilemap : TileMap) -> Dictionary:
-	print_debug("L - %s" % [[tilemap.get_cell_tile_data(0, Vector2()), tilemap.get_cell_tile_data(1, Vector2()), tilemap.get_cell_tile_data(2, Vector2()), tilemap.get_cell_tile_data(3, Vector2()), tilemap.get_cell_tile_data(4, Vector2())]])
+	#print_debug("L - %s" % [[tilemap.get_cell_tile_data(0, Vector2()), tilemap.get_cell_tile_data(1, Vector2()), tilemap.get_cell_tile_data(2, Vector2()), tilemap.get_cell_tile_data(3, Vector2()), tilemap.get_cell_tile_data(4, Vector2())]])
 
 	var tile_data : TileData
 	var top_data : TileData
@@ -374,19 +375,19 @@ func select_tile(origin_pos : Vector2, tilemap : TileMap) -> Dictionary:
 			tile_data = bot_data
 			target_pos = base_cell_pos
 			target_layer = l
-			print_debug("bot-%s,%s,%s" % [tile_data, target_pos, target_layer])
+			#print_debug("bot-%s,%s,%s" % [tile_data, target_pos, target_layer])
 			break
 		elif top_neighbor:
 			tile_data = top_neighbor
 			target_pos = neighbor_cell_pos
 			target_layer = l
-			print_debug("neighbor-%s,%s,%s" % [tile_data, target_pos, target_layer])
+			#print_debug("neighbor-%s,%s,%s" % [tile_data, target_pos, target_layer])
 			break
 		elif top_data:
 			tile_data = top_data
 			target_pos = top_cell_pos
 			target_layer = l
-			print_debug("top-%s,%s,%s" % [tile_data, target_pos, target_layer])
+			#print_debug("top-%s,%s,%s" % [tile_data, target_pos, target_layer])
 			break
 
 	if tile_data:
@@ -426,57 +427,6 @@ func select_tile(origin_pos : Vector2, tilemap : TileMap) -> Dictionary:
 		}
 	else:
 		return {}
-
-
-func try_get_stacked_tile(tile_data : TileData, target_pos : Vector2, target_layer : int, y_sort_origin : int) -> Dictionary:
-	#if !tile_data: return {}
-	var base_cell = tilemap.local_to_map(target_pos)
-	var target_tile = tile_data
-	var target_cell = tilemap.local_to_map(target_pos)
-	var next_pos := Vector2(target_pos.x, target_pos.y)
-	#var next_pos := Vector2(target_pos.x, target_pos.y - 16)
-	#target_pos = Vector2(target_pos.x, target_pos.y + (target_layer * 16))
-	#print_debug("stack - selected %s, %s | L[%s], %s" % [base_cell, next_pos, target_layer, y_sort_origin])
-	var tmp : TileData
-	var tmp_cell : Vector2i
-	var i = -target_layer # the amount of 16px offset for the next layers
-	#for l in range(target_layer, tilemap.get_layers_count()):
-		#next_pos = Vector2(target_pos.x, target_pos.y - (i * 16))
-		
-	for l in range(0, tilemap.get_layers_count()):
-		#print_debug("i=%s, %s" % [i, i * 16])
-		tmp_cell = Vector2i(base_cell.x, base_cell.y - (i * 2))
-		next_pos = tilemap.map_to_local(tmp_cell)
-		#next_pos = Vector2(target_pos.x, target_pos.y - (i * 16))
-		# use next_pos since 'inside(...)' should always be true for tiles above the selected one
-		# FIXME: this is returning null somehow when trying to search during q highlight
-		#print_debug("GET TMP - %s, %s, [%s, %s], %s, map_to_loc=%s" % [l, next_pos, base_cell, tmp_cell, next_pos, tilemap.map_to_local(tmp_cell)])
-		tmp = try_get_tile(l, next_pos, tmp_cell, next_pos, tilemap)
-		#print_debug("check above tiles: %s - %s = %s" % [point_pos, next_pos, tmp])
-		if !tmp: break # break if run out of tiles directly connected above; should not select tiles that are above but not connected
-		target_tile = tmp
-		target_pos = next_pos
-		target_cell = tmp_cell
-		target_layer = l
-		y_sort_origin = tilemap.get_layer_y_sort_origin(l) # get y_sort of the next tile above
-		i += 1
-	#print_debug("after TMP - %s, [%s, %s], %s" % [target_layer, target_cell, target_pos, y_sort_origin])
-	# get surface polygon shape from collision layer 3
-	var p := target_tile.get_collision_polygon_points(3, 0)
-	# adjust polygon point positions to account for layer y_sort_origin
-	i = 0
-	for point in p:
-		p.set(i, Vector2(point.x, point.y - y_sort_origin))
-		i += 1
-	
-	return {
-		"tile": target_tile,
-		"target_pos": target_pos,
-		"target_cell": target_cell,
-		"layer": target_layer,
-		"y_sort_origin": y_sort_origin,
-		"polygon": p
-	}
 
 
 func try_get_tile(layer : int, point_pos : Vector2, cell_coords : Vector2i, cell_pos : Vector2, tilemap : TileMap) -> TileData:

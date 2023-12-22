@@ -75,6 +75,10 @@ use_texture_padding = false
 4:0/0/physics_layer_3/angular_velocity = 0.0
 4:0/0/physics_layer_3/polygon_0/points = PackedVector2Array(0, -24, -16, 0, 0, 8, 16, -16)
 4:0/0/custom_data_0 = 2
+4:0/0/custom_data_2 = {
+"properties": {},
+"type": "ramp"
+}
 5:0/0 = 0
 5:0/0/texture_origin = Vector2i(0, 8)
 5:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
@@ -89,6 +93,10 @@ use_texture_padding = false
 5:0/0/physics_layer_3/angular_velocity = 0.0
 5:0/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -16, 0, 8, 16, 0, 0, -24)
 5:0/0/custom_data_0 = 2
+5:0/0/custom_data_2 = {
+"properties": {},
+"type": "ramp"
+}
 6:0/0 = 0
 6:0/0/texture_origin = Vector2i(0, 8)
 6:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
@@ -215,8 +223,12 @@ use_texture_padding = false
 0:1/0/physics_layer_2/polygon_0/points = PackedVector2Array(0, -16, 16, -8, 16, 0, 0, 8, -16, 0)
 0:1/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 0:1/0/physics_layer_3/angular_velocity = 0.0
-0:1/0/physics_layer_3/polygon_0/points = PackedVector2Array(0, -16, 16, -8, 10.6667, -5.33333, 10.6667, -2.66667, 5.33333, 0, 5.33333, 2.66667, 0, 5.33333, -16, -2.66667, -10.6667, -5.33333, -10.6667, -8, -5.33333, -10.6667, -5.33333, -13.3333)
+0:1/0/physics_layer_3/polygon_0/points = PackedVector2Array(0, -16, 16, -8, 10.6667, -5.33333, 10.6667, -2.66667, 5.33333, 0, 5.33333, 2.66667, 0, 5.33333, 0, 8, -16, 0, -16, -2.66667, -10.6667, -5.33333, -10.6667, -8, -5.33333, -10.6667, -5.33333, -13.3333)
 0:1/0/custom_data_0 = 3
+0:1/0/custom_data_2 = {
+"properties": {},
+"type": "ramp"
+}
 1:1/0 = 0
 1:1/0/texture_origin = Vector2i(0, 8)
 1:1/0/physics_layer_0/linear_velocity = Vector2(0, 0)
@@ -229,8 +241,12 @@ use_texture_padding = false
 1:1/0/physics_layer_2/polygon_0/points = PackedVector2Array(0, -24, 16, -16, 16, 0, 0, 8, -16, 0, -16, -12)
 1:1/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 1:1/0/physics_layer_3/angular_velocity = 0.0
-1:1/0/physics_layer_3/polygon_0/points = PackedVector2Array(0, -24, 16, -16, 16, -16, 10.6667, -13.3333, 10.6667, -10.6667, 5.33333, -8, 5.33333, -5.33333, 0, -2.66667, -16, -10, -10.6667, -13.3333, -10.6667, -16, -5.33333, -18.6667, -5.33333, -21.3333)
+1:1/0/physics_layer_3/polygon_0/points = PackedVector2Array(0, -24, 16, -16, 16, -16, 10.6667, -13.3333, 10.6667, -10.6667, 5.33333, -8, 5.33333, -5.33333, 0, -2.66667, 0, 0, -16, -8, -16, -10, -10.6667, -13.3333, -10.6667, -16, -5.33333, -18.6667, -5.33333, -21.3333)
 1:1/0/custom_data_0 = 1
+1:1/0/custom_data_2 = {
+"properties": {},
+"type": "ramp"
+}
 2:1/0 = 0
 2:1/0/texture_origin = Vector2i(0, 8)
 2:1/0/physics_layer_0/linear_velocity = Vector2(0, 0)
@@ -243,8 +259,12 @@ use_texture_padding = false
 2:1/0/physics_layer_2/polygon_0/points = PackedVector2Array(0, -24, 16, -12, 16, 0, 0, 8, -16, 0, -16, -16)
 2:1/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 2:1/0/physics_layer_3/angular_velocity = 0.0
-2:1/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -16, -10.6667, -13.3333, -10.6667, -10.6667, -5.33333, -8, -5.33333, -5.33333, 0, -2.66667, 16, -10.6667, 10.6667, -13.3333, 10.6667, -16, 5.33333, -18.6667, 5.33333, -21.3333, 0, -24)
+2:1/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -16, -10.6667, -13.3333, -10.6667, -10.6667, -5.33333, -8, -5.33333, -5.33333, 0, -2.66667, 0, 0, 16, -8, 16, -10.6667, 10.6667, -13.3333, 10.6667, -16, 5.33333, -18.6667, 5.33333, -21.3333, 0, -24)
 2:1/0/custom_data_0 = 1
+2:1/0/custom_data_2 = {
+"properties": {},
+"type": "ramp"
+}
 3:1/0 = 0
 3:1/0/texture_origin = Vector2i(0, 8)
 3:1/0/physics_layer_0/linear_velocity = Vector2(0, 0)
@@ -257,8 +277,12 @@ use_texture_padding = false
 3:1/0/physics_layer_2/polygon_0/points = PackedVector2Array(0, -16, 16, 0, 0, 8, -16, 0, -16, -8)
 3:1/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 3:1/0/physics_layer_3/angular_velocity = 0.0
-3:1/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -8, -10.6667, -5.33333, -10.6667, -2.66667, -5.33333, 0, -5.33333, 2.66667, 0, 5.33333, 16, -2.66667, 10.6667, -5.33333, 10.6667, -8, 5.33333, -10.6667, 5.33333, -13.3333, 0, -16)
+3:1/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -8, -10.6667, -5.33333, -10.6667, -2.66667, -5.33333, 0, -5.33333, 2.66667, 0, 5.33333, 0, 8, 16, 0, 16, -2.66667, 10.6667, -5.33333, 10.6667, -8, 5.33333, -10.6667, 5.33333, -13.3333, 0, -16)
 3:1/0/custom_data_0 = 3
+3:1/0/custom_data_2 = {
+"properties": {},
+"type": "ramp"
+}
 4:1/0 = 0
 4:1/0/texture_origin = Vector2i(0, 8)
 4:1/0/physics_layer_0/linear_velocity = Vector2(0, 0)
@@ -411,6 +435,10 @@ use_texture_padding = false
 0:2/0/physics_layer_3/angular_velocity = 0.0
 0:2/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, 0, 0, 0, 16, -8, 0, -8)
 0:2/0/custom_data_0 = 3
+0:2/0/custom_data_2 = {
+"properties": {},
+"type": "ramp"
+}
 1:2/0 = 0
 1:2/0/texture_origin = Vector2i(0, 8)
 1:2/0/physics_layer_0/linear_velocity = Vector2(0, 0)
@@ -425,6 +453,10 @@ use_texture_padding = false
 1:2/0/physics_layer_3/angular_velocity = 0.0
 1:2/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -8, 0, -8, 16, -16, 0, -16)
 1:2/0/custom_data_0 = 1
+1:2/0/custom_data_2 = {
+"properties": {},
+"type": "ramp"
+}
 2:2/0 = 0
 2:2/0/texture_origin = Vector2i(0, 8)
 2:2/0/physics_layer_0/linear_velocity = Vector2(0, 0)
@@ -439,6 +471,10 @@ use_texture_padding = false
 2:2/0/physics_layer_3/angular_velocity = 0.0
 2:2/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -16, 0, -8, 16, -8, 0, -16)
 2:2/0/custom_data_0 = 1
+2:2/0/custom_data_2 = {
+"properties": {},
+"type": "ramp"
+}
 3:2/0 = 0
 3:2/0/texture_origin = Vector2i(0, 8)
 3:2/0/physics_layer_0/linear_velocity = Vector2(0, 0)
@@ -453,6 +489,10 @@ use_texture_padding = false
 3:2/0/physics_layer_3/angular_velocity = 0.0
 3:2/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -8, 0, 0, 16, 0, 0, -8, -16, -8)
 3:2/0/custom_data_0 = 3
+3:2/0/custom_data_2 = {
+"properties": {},
+"type": "ramp"
+}
 4:2/0 = 0
 4:2/0/texture_origin = Vector2i(0, 8)
 4:2/0/physics_layer_0/linear_velocity = Vector2(0, 0)
@@ -616,6 +656,12 @@ use_texture_padding = false
 0:3/0/physics_layer_3/angular_velocity = 0.0
 0:3/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, 0, 0, 8, 16, -8, 0, -16)
 0:3/0/custom_data_0 = 3
+0:3/0/custom_data_2 = {
+"properties": {
+"direction": Vector2(1, -1)
+},
+"type": "ramp"
+}
 1:3/0 = 0
 1:3/0/texture_origin = Vector2i(0, 8)
 1:3/0/physics_layer_0/linear_velocity = Vector2(0, 0)
@@ -630,6 +676,12 @@ use_texture_padding = false
 1:3/0/physics_layer_3/angular_velocity = 0.0
 1:3/0/physics_layer_3/polygon_0/points = PackedVector2Array(0, -24, -16, -8, 0, 0, 16, -16)
 1:3/0/custom_data_0 = 1
+1:3/0/custom_data_2 = {
+"properties": {
+"direction": Vector2(1, -1)
+},
+"type": "ramp"
+}
 2:3/0 = 0
 2:3/0/texture_origin = Vector2i(0, 8)
 2:3/0/physics_layer_0/linear_velocity = Vector2(0, 0)
@@ -644,6 +696,12 @@ use_texture_padding = false
 2:3/0/physics_layer_3/angular_velocity = 0.0
 2:3/0/physics_layer_3/polygon_0/points = PackedVector2Array(0, -24, -16, -16, 0, 0, 16, -8)
 2:3/0/custom_data_0 = 1
+2:3/0/custom_data_2 = {
+"properties": {
+"direction": Vector2(-1, -1)
+},
+"type": "ramp"
+}
 3:3/0 = 0
 3:3/0/texture_origin = Vector2i(0, 8)
 3:3/0/physics_layer_0/linear_velocity = Vector2(0, 0)
@@ -658,6 +716,12 @@ use_texture_padding = false
 3:3/0/physics_layer_3/angular_velocity = 0.0
 3:3/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -8, 0, 8, 16, 0, 0, -16)
 3:3/0/custom_data_0 = 3
+3:3/0/custom_data_2 = {
+"properties": {
+"direction": Vector2(-1, -1)
+},
+"type": "ramp"
+}
 4:3/0 = 0
 4:3/0/texture_origin = Vector2i(0, 8)
 4:3/0/physics_layer_0/linear_velocity = Vector2(0, 0)
@@ -670,8 +734,12 @@ use_texture_padding = false
 4:3/0/physics_layer_2/polygon_0/points = PackedVector2Array(0, -24, -16, 0, 0, 8, 16, 0, 16, -16)
 4:3/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 4:3/0/physics_layer_3/angular_velocity = 0.0
-4:3/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -4, 0, 4, 4, 2, 4, -2, 8, -4, 8, -8, 12, -10, 12, -14, 16, -16, 0, -24, -4, -22, -4, -18, -8, -16, -8, -12, -12, -10, -12, -6)
+4:3/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -4, -16, 0, 0, 8, 0, 4, 4, 2, 4, -2, 8, -4, 8, -8, 12, -10, 12, -14, 16, -16, 0, -24, -4, -22, -4, -18, -8, -16, -8, -12, -12, -10, -12, -6)
 4:3/0/custom_data_0 = 2
+4:3/0/custom_data_2 = {
+"properties": {},
+"type": "ramp"
+}
 5:3/0 = 0
 5:3/0/texture_origin = Vector2i(0, 8)
 5:3/0/physics_layer_0/linear_velocity = Vector2(0, 0)
@@ -684,8 +752,12 @@ use_texture_padding = false
 5:3/0/physics_layer_2/polygon_0/points = PackedVector2Array(0, -24, -16, -16, -16, 0, 0, 8, 16, 0)
 5:3/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 5:3/0/physics_layer_3/angular_velocity = 0.0
-5:3/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -16, -12, -14, -12, -10, -8, -8, -8, -4, -4, -2, -4, 2, 0, 4, 16, -4, 12, -6, 12, -10, 8, -12, 8, -16, 4, -18, 4, -22, 0, -24)
+5:3/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -16, -12, -14, -12, -10, -8, -8, -8, -4, -4, -2, -4, 2, 0, 4, 0, 8, 16, 0, 16, -4, 12, -6, 12, -10, 8, -12, 8, -16, 4, -18, 4, -22, 0, -24)
 5:3/0/custom_data_0 = 2
+5:3/0/custom_data_2 = {
+"properties": {},
+"type": "ramp"
+}
 6:3/0 = 0
 6:3/0/texture_origin = Vector2i(0, 8)
 6:3/0/physics_layer_0/linear_velocity = Vector2(0, 0)
@@ -871,7 +943,7 @@ use_texture_padding = false
 4:4/0/physics_layer_2/polygon_0/points = PackedVector2Array(-16, 0, 0, 8, 16, 0, 16, -16, 10, -16, -16, -3)
 4:4/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 4:4/0/physics_layer_3/angular_velocity = 0.0
-4:4/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -4, -10.6667, -1.33333, 16, -14.6667, 10.6667, -17.3333)
+4:4/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -4, -12, -2, 16, -16, 12, -18)
 4:4/0/custom_data_0 = 2
 4:4/0/custom_data_1 = -1
 5:4/0 = 0
@@ -886,7 +958,7 @@ use_texture_padding = false
 5:4/0/physics_layer_2/polygon_0/points = PackedVector2Array(-16, 0, 0, 8, 16, 0, 16, -3, -10, -16, -16, -16)
 5:4/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 5:4/0/physics_layer_3/angular_velocity = 0.0
-5:4/0/physics_layer_3/polygon_0/points = PackedVector2Array(10.6667, -1.33333, 16, -4, -10.6667, -17.3333, -16, -14.6667)
+5:4/0/physics_layer_3/polygon_0/points = PackedVector2Array(12, -2, 16, -4, -10.6667, -17.3333, -16, -16)
 5:4/0/custom_data_0 = 2
 5:4/0/custom_data_1 = -1
 6:4/0 = 0
@@ -901,7 +973,7 @@ use_texture_padding = false
 6:4/0/physics_layer_2/polygon_0/points = PackedVector2Array(0, -12, -16, -4, -16, 0, 0, 8, 16, 0, 16, -4)
 6:4/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 6:4/0/physics_layer_3/angular_velocity = 0.0
-6:4/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -4, -10.6667, -1.33333, 0, -6.66667, 10.6667, -1.33333, 16, -4, 0, -12)
+6:4/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -4, -12, -2, 0, -8, 12, -2, 16, -4, 0, -12)
 6:4/0/custom_data_0 = 2
 6:4/0/custom_data_1 = -1
 7:4/0 = 0
@@ -916,7 +988,7 @@ use_texture_padding = false
 7:4/0/physics_layer_2/polygon_0/points = PackedVector2Array(-16, -16, -16, 0, 0, 8, 16, 0, 16, -16, 8, -16, 0, -12, -8, -16)
 7:4/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 7:4/0/physics_layer_3/angular_velocity = 0.0
-7:4/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -16, 0, -8, 16, -16, 10.6667, -17.3333, 0, -12, -10.6667, -17.3333)
+7:4/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -16, 0, -8, 16, -16, 12, -18, 0, -12, -12, -18)
 7:4/0/custom_data_0 = 2
 7:4/0/custom_data_1 = -1
 8:4/0 = 0
@@ -1025,6 +1097,7 @@ use_texture_padding = false
 1:5/0/physics_layer_2/polygon_0/points = PackedVector2Array(0, -20, -16, -12, -16, 0, 0, 8, 16, 0, 16, -12)
 1:5/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 1:5/0/physics_layer_3/angular_velocity = 0.0
+1:5/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -12, 0, -4, 16, -12, 0, -20)
 1:5/0/custom_data_0 = 1
 2:5/0 = 0
 2:5/0/texture_origin = Vector2i(0, 8)
@@ -1038,6 +1111,7 @@ use_texture_padding = false
 2:5/0/physics_layer_2/polygon_0/points = PackedVector2Array(0, -20, -16, -12, -16, 0, 0, 8, 16, 0, 16, -12)
 2:5/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 2:5/0/physics_layer_3/angular_velocity = 0.0
+2:5/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -12, 0, -4, 16, -12, 0, -20)
 2:5/0/custom_data_0 = 1
 3:5/0 = 0
 3:5/0/texture_origin = Vector2i(0, 8)
@@ -1051,6 +1125,7 @@ use_texture_padding = false
 3:5/0/physics_layer_2/polygon_0/points = PackedVector2Array(0, -20, -16, -12, -16, 0, 0, 8, 16, 0, 16, -12)
 3:5/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 3:5/0/physics_layer_3/angular_velocity = 0.0
+3:5/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -12, 0, -4, 16, -12, 0, -20)
 3:5/0/custom_data_0 = 1
 4:5/0 = 0
 4:5/0/texture_origin = Vector2i(0, 8)
@@ -1064,7 +1139,7 @@ use_texture_padding = false
 4:5/0/physics_layer_2/polygon_0/points = PackedVector2Array(-16, 0, 0, 8, 16, 0, 16, -16, 8, -16, -16, -4)
 4:5/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 4:5/0/physics_layer_3/angular_velocity = 0.0
-4:5/0/physics_layer_3/polygon_0/points = PackedVector2Array(16, -15, 12, -13, 12, -9, 8, -7, 8, -3, 4, -1, 4, 3, 0, 5, -16, -3, 12, -17)
+4:5/0/physics_layer_3/polygon_0/points = PackedVector2Array(16, -16, 12, -14, 12, -10, 8, -8, 8, -4, 4, -2, 4, 2, 0, 4, 0, 8, -16, 0, -16, -4, 12, -18)
 4:5/0/custom_data_0 = 2
 5:5/0 = 0
 5:5/0/texture_origin = Vector2i(0, 8)
@@ -1078,7 +1153,7 @@ use_texture_padding = false
 5:5/0/physics_layer_2/polygon_0/points = PackedVector2Array(-16, -16, -16, 0, 0, 8, 16, 0, 16, -4, -8, -16)
 5:5/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 5:5/0/physics_layer_3/angular_velocity = 0.0
-5:5/0/physics_layer_3/polygon_0/points = PackedVector2Array(-12, -17, 16, -3, 0, 5, -4, 3, -4, -1, -8, -3, -8, -7, -12, -9, -12, -13, -16, -15)
+5:5/0/physics_layer_3/polygon_0/points = PackedVector2Array(-12, -18, 16, -4, 16, 0, 0, 8, 0, 4, -4, 2, -4, -2, -8, -4, -8, -8, -12, -10, -12, -14, -16, -16)
 5:5/0/custom_data_0 = 2
 6:5/0 = 0
 6:5/0/texture_origin = Vector2i(0, 8)
@@ -1092,7 +1167,7 @@ use_texture_padding = false
 6:5/0/physics_layer_2/polygon_0/points = PackedVector2Array(0, -24, -16, 0, 0, 8, 16, 0, 16, -4)
 6:5/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 6:5/0/physics_layer_3/angular_velocity = 0.0
-6:5/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -4, 0, 4, 16, -4, 12, -6, 12, -10, 8, -12, 8, -16, 4, -18, 4, -22, 0, -24, -4, -22, -4, -18, -8, -16, -8, -12, -12, -10, -12, -6)
+6:5/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -4, -16, 0, 0, 8, 16, 0, 16, -4, 12, -6, 12, -10, 8, -12, 8, -16, 4, -18, 4, -22, 0, -24, -4, -22, -4, -18, -8, -16, -8, -12, -12, -10, -12, -6)
 6:5/0/custom_data_0 = 2
 7:5/0 = 0
 7:5/0/texture_origin = Vector2i(0, 8)
@@ -1214,6 +1289,7 @@ use_texture_padding = false
 1:6/0/physics_layer_2/polygon_0/points = PackedVector2Array(0, -16, -16, -8, -16, 0, 0, 8, 16, 0, 16, -8)
 1:6/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 1:6/0/physics_layer_3/angular_velocity = 0.0
+1:6/0/physics_layer_3/polygon_0/points = PackedVector2Array(0, 0, 16, -8, 0, -16, -16, -8)
 1:6/0/custom_data_0 = 2
 2:6/0 = 0
 2:6/0/texture_origin = Vector2i(0, 8)
@@ -1227,6 +1303,7 @@ use_texture_padding = false
 2:6/0/physics_layer_2/polygon_0/points = PackedVector2Array(0, -16, -16, -8, -16, 0, 0, 8, 16, 0, 16, -8)
 2:6/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 2:6/0/physics_layer_3/angular_velocity = 0.0
+2:6/0/physics_layer_3/polygon_0/points = PackedVector2Array(0, 0, 16, -8, 0, -16, -16, -8)
 2:6/0/custom_data_0 = 2
 3:6/0 = 0
 3:6/0/texture_origin = Vector2i(0, 8)
@@ -1240,6 +1317,7 @@ use_texture_padding = false
 3:6/0/physics_layer_2/polygon_0/points = PackedVector2Array(0, -16, -16, -8, -16, 0, 0, 8, 16, 0, 16, -8)
 3:6/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 3:6/0/physics_layer_3/angular_velocity = 0.0
+3:6/0/physics_layer_3/polygon_0/points = PackedVector2Array(0, 0, 16, -8, 0, -16, -16, -8)
 3:6/0/custom_data_0 = 2
 4:6/0 = 0
 4:6/0/texture_origin = Vector2i(0, 8)
@@ -1253,7 +1331,7 @@ use_texture_padding = false
 4:6/0/physics_layer_2/polygon_0/points = PackedVector2Array(0, -24, -16, -12, -16, 0, 0, 8, 16, 0, 16, -8)
 4:6/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 4:6/0/physics_layer_3/angular_velocity = 0.0
-4:6/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -11, 0, -3, 16, -11, 12, -13, 12, -15, 6, -18, 6, -21, 0, -24, -6, -21, -6, -18, -12, -15, -12, -13)
+4:6/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -11, -16, -8, 0, 0, 16, -8, 16, -11, 12, -13, 12, -15, 6, -18, 6, -21, 0, -24, -6, -21, -6, -18, -12, -15, -12, -13)
 4:6/0/custom_data_0 = 1
 5:6/0 = 0
 5:6/0/texture_origin = Vector2i(0, 8)
@@ -1403,6 +1481,7 @@ use_texture_padding = false
 1:7/0/physics_layer_2/polygon_0/points = PackedVector2Array(0, -12, -16, -4, -16, 0, 0, 8, 16, 0, 16, -4)
 1:7/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 1:7/0/physics_layer_3/angular_velocity = 0.0
+1:7/0/physics_layer_3/polygon_0/points = PackedVector2Array(0, 4, 16, -4, 0, -12, -16, -4)
 1:7/0/custom_data_0 = 3
 2:7/0 = 0
 2:7/0/texture_origin = Vector2i(0, 8)
@@ -1416,6 +1495,7 @@ use_texture_padding = false
 2:7/0/physics_layer_2/polygon_0/points = PackedVector2Array(0, -12, -16, -4, -16, 0, 0, 8, 16, 0, 16, -4)
 2:7/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 2:7/0/physics_layer_3/angular_velocity = 0.0
+2:7/0/physics_layer_3/polygon_0/points = PackedVector2Array(0, 4, 16, -4, 0, -12, -16, -4)
 2:7/0/custom_data_0 = 3
 3:7/0 = 0
 3:7/0/texture_origin = Vector2i(0, 8)
@@ -1429,6 +1509,7 @@ use_texture_padding = false
 3:7/0/physics_layer_2/polygon_0/points = PackedVector2Array(0, -12, -16, -4, -16, 0, 0, 8, 16, 0, 16, -4)
 3:7/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 3:7/0/physics_layer_3/angular_velocity = 0.0
+3:7/0/physics_layer_3/polygon_0/points = PackedVector2Array(0, 4, 16, -4, 0, -12, -16, -4)
 3:7/0/custom_data_0 = 3
 4:7/0 = 0
 4:7/0/texture_origin = Vector2i(0, 8)
@@ -1442,7 +1523,7 @@ use_texture_padding = false
 4:7/0/physics_layer_2/polygon_0/points = PackedVector2Array(0, -16, -16, -4, -16, 0, 0, 8, 16, 0, 16, -4)
 4:7/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 4:7/0/physics_layer_3/angular_velocity = 0.0
-4:7/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -3, 0, 5, 16, -3, 12, -5, 12, -7, 6, -10, 6, -13, 0, -16, -6, -13, -6, -10, -12, -7, -12, -5)
+4:7/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -3, -16, 0, 0, 8, 16, 0, 16, -3, 12, -5, 12, -7, 6, -10, 6, -13, 0, -16, -6, -13, -6, -10, -12, -7, -12, -5)
 4:7/0/custom_data_0 = 3
 5:7/0 = 0
 5:7/0/texture_origin = Vector2i(0, 8)
@@ -1633,7 +1714,7 @@ use_texture_padding = false
 4:8/0/physics_layer_2/polygon_0/points = PackedVector2Array(-16, -4, -16, 0, 0, 8, 16, 0, 16, -4, 8, -12, 0, -12)
 4:8/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 4:8/0/physics_layer_3/angular_velocity = 0.0
-4:8/0/physics_layer_3/polygon_0/points = PackedVector2Array(16, -8, 0, 0, -6, -2, -6, 0, -12, -2, -12, 0, -16, -2, -16, -3, 0, -11, 2, -10, 4, -11, 8, -10, 8, -11)
+4:8/0/physics_layer_3/polygon_0/points = PackedVector2Array(16, -8, 0, 0, -8, -2, -8, 0, -12, -2, -12, 0, -16, -2, -16, -4, 0, -12, 8, -12)
 4:8/0/custom_data_0 = 3
 5:8/0 = 0
 5:8/0/texture_origin = Vector2i(0, 8)
@@ -1647,7 +1728,7 @@ use_texture_padding = false
 5:8/0/physics_layer_2/polygon_0/points = PackedVector2Array(-16, -12, -16, 0, 0, 8, 16, 0, 16, -16, 8, -20, 0, -20)
 5:8/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 5:8/0/physics_layer_3/angular_velocity = 0.0
-5:8/0/physics_layer_3/polygon_0/points = PackedVector2Array(16, -16, 0, -8, -6, -11, -6, -8, -12, -11, -12, -8, -16, -10, -16, -11, 0, -19, 2, -17, 6, -19, 6, -17, 10, -19)
+5:8/0/physics_layer_3/polygon_0/points = PackedVector2Array(16, -16, 0, -8, -16, -11, 0, -19)
 5:8/0/custom_data_0 = 1
 6:8/0 = 0
 6:8/0/texture_origin = Vector2i(0, 8)
@@ -1661,6 +1742,7 @@ use_texture_padding = false
 6:8/0/physics_layer_2/polygon_0/points = PackedVector2Array(-16, -16, -16, 0, 0, 8, 16, 0, 16, -8, 0, -20, -8, -20)
 6:8/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 6:8/0/physics_layer_3/angular_velocity = 0.0
+6:8/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -16, 0, -8, 16, -12, 0, -20)
 6:8/0/custom_data_0 = 1
 7:8/0 = 0
 7:8/0/texture_origin = Vector2i(0, 8)
@@ -1674,6 +1756,7 @@ use_texture_padding = false
 7:8/0/physics_layer_2/polygon_0/points = PackedVector2Array(-16, -8, -16, 0, 0, 8, 16, 0, 16, -4, 0, -12, -8, -12)
 7:8/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 7:8/0/physics_layer_3/angular_velocity = 0.0
+7:8/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -8, 0, 0, 16, -4, 0, -12)
 7:8/0/custom_data_0 = 3
 8:8/0 = 0
 8:8/0/texture_origin = Vector2i(0, 8)
@@ -1687,6 +1770,7 @@ use_texture_padding = false
 8:8/0/physics_layer_2/polygon_0/points = PackedVector2Array(-16, 0, -16, -4, 0, -16, 16, -8, 16, 0, 0, 8)
 8:8/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 8:8/0/physics_layer_3/angular_velocity = 0.0
+8:8/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -2.66667, 0, 1.33333, 16, -6.66667, 0, -14.6667)
 8:8/0/custom_data_0 = 3
 9:8/0 = 0
 9:8/0/texture_origin = Vector2i(0, 8)
@@ -1821,6 +1905,7 @@ use_texture_padding = false
 4:9/0/physics_layer_2/polygon_0/points = PackedVector2Array(-16, -4, -16, 0, 0, 8, 16, 0, 16, -8, 8, -12, 0, -12)
 4:9/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 4:9/0/physics_layer_3/angular_velocity = 0.0
+4:9/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -4, 0, 4, 16, -8, 8, -12, 0, -12)
 4:9/0/custom_data_0 = 3
 5:9/0 = 0
 5:9/0/texture_origin = Vector2i(0, 8)
@@ -1834,6 +1919,7 @@ use_texture_padding = false
 5:9/0/physics_layer_2/polygon_0/points = PackedVector2Array(-16, -12, -16, 0, 0, 8, 16, 0, 16, -16, 8, -20, 0, -20)
 5:9/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 5:9/0/physics_layer_3/angular_velocity = 0.0
+5:9/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -12, 0, -4, 16, -16, 8, -20, 0, -20)
 5:9/0/custom_data_0 = 1
 6:9/0 = 0
 6:9/0/texture_origin = Vector2i(0, 8)
@@ -1847,6 +1933,7 @@ use_texture_padding = false
 6:9/0/physics_layer_2/polygon_0/points = PackedVector2Array(-8, -20, -16, -16, -16, 0, 0, 8, 16, -4, 16, -12, 0, -20)
 6:9/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 6:9/0/physics_layer_3/angular_velocity = 0.0
+6:9/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -16, 0, -4, 16, -12, 0, -20, -8, -20)
 6:9/0/custom_data_0 = 1
 7:9/0 = 0
 7:9/0/texture_origin = Vector2i(0, 8)
@@ -1860,6 +1947,7 @@ use_texture_padding = false
 7:9/0/physics_layer_2/polygon_0/points = PackedVector2Array(-16, -8, -16, 0, 0, 8, 16, 0, 16, -4, 0, -12, -8, -12, -16, -8)
 7:9/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 7:9/0/physics_layer_3/angular_velocity = 0.0
+7:9/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -8, 0, 4, 16, -4, 0, -12, -8, -12)
 7:9/0/custom_data_0 = 3
 8:9/0 = 0
 8:9/0/texture_origin = Vector2i(0, 8)
@@ -1873,6 +1961,7 @@ use_texture_padding = false
 8:9/0/physics_layer_2/polygon_0/points = PackedVector2Array(-16, -12, -16, 0, 0, 8, 16, 0, 16, -16, 0, -24)
 8:9/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 8:9/0/physics_layer_3/angular_velocity = 0.0
+8:9/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -10.6667, 0, -6.66667, 16, -14.6667, 0, -22.6667)
 8:9/0/custom_data_0 = 1
 9:9/0 = 0
 9:9/0/texture_origin = Vector2i(0, 8)
@@ -5235,4 +5324,6 @@ custom_data_layer_0/name = "offset_id"
 custom_data_layer_0/type = 2
 custom_data_layer_1/name = "z_index_offset"
 custom_data_layer_1/type = 2
+custom_data_layer_2/name = "info"
+custom_data_layer_2/type = 27
 sources/0 = SubResource("TileSetAtlasSource_yp5n0")
